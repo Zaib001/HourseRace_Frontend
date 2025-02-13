@@ -7,6 +7,7 @@ const AdminPanel = ({ user }) => {
   const [horses, setHorses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [approvedHorses, setApprovedHorses] = useState({}); // Store approved horses
+  const [search, setSearch] = useState(""); // Search box state
 
   useEffect(() => {
     async function fetchHorses() {
@@ -37,6 +38,11 @@ const AdminPanel = ({ user }) => {
     }
   };
 
+  // Filter horses based on search input
+  const filteredHorses = horses.filter((horse) =>
+    horse.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -48,9 +54,25 @@ const AdminPanel = ({ user }) => {
         Admin Panel - Approve Horses
       </h2>
 
+      {/* Search Box */}
+      <div className="flex items-center justify-center mb-6">
+        <input
+          type="text"
+          placeholder="Search Horse by Name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-l-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition"
+        >
+          🔍 Search
+        </button>
+      </div>
+
       {loading ? (
         <p className="text-center text-gray-500 animate-pulse">Loading pending approvals...</p>
-      ) : horses.length === 0 ? (
+      ) : filteredHorses.length === 0 ? (
         <p className="text-center text-gray-500">No horses pending approval.</p>
       ) : (
         <div className="overflow-x-auto">
@@ -68,7 +90,7 @@ const AdminPanel = ({ user }) => {
               </tr>
             </thead>
             <tbody>
-              {horses.map((horse, index) => (
+              {filteredHorses.map((horse, index) => (
                 <motion.tr
                   key={horse.name}
                   initial={{ opacity: 0, y: -10 }}
@@ -93,12 +115,12 @@ const AdminPanel = ({ user }) => {
                     {!approvedHorses[horse.name] ? (
                       <button
                         onClick={() => handleApprove(horse.name)}
-                        className="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition"
+                        className="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition"
                       >
-                        Approve ✅
+                        Approve ⚡
                       </button>
                     ) : (
-                      <span className="text-green-700 font-bold">Approved ✅</span>
+                      <span className="bg-green-600 text-white px-3 py-2 rounded">Approved ✅</span>
                     )}
                   </td>
                 </motion.tr>
