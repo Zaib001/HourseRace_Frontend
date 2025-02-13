@@ -8,7 +8,6 @@ const AdminPanel = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [approvedHorses, setApprovedHorses] = useState({}); // Store approved horses
   const [search, setSearch] = useState(""); // Search box state
-  console.log(horses[0].owner)
   useEffect(() => {
     async function fetchHorses() {
       try {
@@ -27,7 +26,7 @@ const AdminPanel = ({ user }) => {
     if (!window.confirm(`Are you sure you want to approve "${horseName}"?`)) return;
 
     try {
-      await approveHorse(horseName, horses[0].owner);
+      await approveHorse(horseName);
       setApprovedHorses((prev) => ({ ...prev, [horseName]: true })); // Mark horse as approved
       setTimeout(() => {
         setHorses((prevHorses) => prevHorses.filter((horse) => horse.name !== horseName)); // Remove after animation
