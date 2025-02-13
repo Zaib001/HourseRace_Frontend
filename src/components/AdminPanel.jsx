@@ -8,7 +8,7 @@ const AdminPanel = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [approvedHorses, setApprovedHorses] = useState({}); // Store approved horses
   const [search, setSearch] = useState(""); // Search box state
-
+  console.log(horses[0].owner)
   useEffect(() => {
     async function fetchHorses() {
       try {
@@ -27,7 +27,7 @@ const AdminPanel = ({ user }) => {
     if (!window.confirm(`Are you sure you want to approve "${horseName}"?`)) return;
 
     try {
-      await approveHorse(horseName, user.token);
+      await approveHorse(horseName, horses[0].owner);
       setApprovedHorses((prev) => ({ ...prev, [horseName]: true })); // Mark horse as approved
       setTimeout(() => {
         setHorses((prevHorses) => prevHorses.filter((horse) => horse.name !== horseName)); // Remove after animation
@@ -96,9 +96,8 @@ const AdminPanel = ({ user }) => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`border-b transition text-center ${
-                    approvedHorses[horse.name] ? "bg-green-100 transition-colors duration-500" : "hover:bg-gray-100"
-                  }`}
+                  className={`border-b transition text-center ${approvedHorses[horse.name] ? "bg-green-100 transition-colors duration-500" : "hover:bg-gray-100"
+                    }`}
                 >
                   <td className="p-4 font-medium">{horse.name}</td>
                   <td className="p-4">{horse.yearOfBirth}</td>
